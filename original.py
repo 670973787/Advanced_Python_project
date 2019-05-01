@@ -470,14 +470,12 @@ if __name__ == "__main__":
 
         for var in ['RevolvingUtilizationOfUnsecuredLines', 'DebtRatio', 'MonthlyIncome',
                     'NumberOfOpenCreditLinesAndLoans', 'NumberRealEstateLoansOrLines']:
-            p = []
-            for i in [0.2, 0.4, 0.6, 0.8]:
-                p.append(dat[var].quantile(i))
-            dat_dis.loc[dat[var] <= p[0], var] = 0
-            dat_dis.loc[(dat[var] <= p[1]) & (dat[var] > p[0]), var] = 1
-            dat_dis.loc[(dat[var] <= p[2]) & (dat[var] > p[1]), var] = 2
-            dat_dis.loc[(dat[var] <= p[3]) & (dat[var] > p[2]), var] = 3
-            dat_dis.loc[(dat[var] > p[3]), var] = 4
+
+            dat_dis.loc[dat[var] <= dat[var]*0.2, var] = 0
+            dat_dis.loc[(dat[var] <= dat[var]*0.4) & (dat[var] > dat[var]*0.2), var] = 1
+            dat_dis.loc[(dat[var] <= dat[var]*0.6) & (dat[var] > dat[var]*0.4), var] = 2
+            dat_dis.loc[(dat[var] <= dat[var]*0.8) & (dat[var] > dat[var]*0.6), var] = 3
+            dat_dis.loc[(dat[var] > dat[var]*0.8), var] = 4
 
 
         dat_dis.loc[dat['age'] <= 20, 'age'] = 0
