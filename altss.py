@@ -1,4 +1,5 @@
 def ALTSS(results, proba, protect, full_arity, mode="right"):
+    
     '''
     Use ALTSS algorithm to dected the subset corresponding to one dimension
     :param results: true result of each records
