@@ -1,5 +1,8 @@
-def ALTSS(results, proba, protect, full_arity, mode="right"):
-    
+%%cython
+import numpy as np
+cimport numpy as np
+
+def ALTSS(np.ndarray results, np.ndarray proba,np.ndarray protect,int full_arity,str mode="right"):
     '''
     Use ALTSS algorithm to dected the subset corresponding to one dimension
     :param results: true result of each records
@@ -10,9 +13,11 @@ def ALTSS(results, proba, protect, full_arity, mode="right"):
     :return: cur_max_score: best score corresponding to the detected subset
               best_subset: detected subset
     '''
-    q_0_s = []
-    q_1_s = []
-    protect_val = np.unique(protect)
+    cdef list q_0_s = []
+    cdef list q_1_s = []
+    cdef np.ndarray protect_val = np.unique(protect)
+    cdef np.ndarray res,pro,subset,best_subset
+
     if (mode == "right"):
         for i in protect_val:
             res = results[protect == i]
@@ -100,11 +105,12 @@ def bias_subscan_sub(dat, mode="right"):
     :param mode: right=underestimate, left=overestimate
     :return: detected subgroup and its score
     '''
-    best_score = -1
-    cur_best_score = -np.inf
-    protect_feature = list(dat.columns[:-2])
-    feature_filter = {}
-    last_feature_filter = {}
+    cdef double best_score = -1
+    cdef double cur_best_score = -np.inf
+    cdef list protect_feature = list(dat.columns[:-2])
+    cdef dict feature_filter = {}
+    cdef dict last_feature_filter = {}
+    cdef np.ndarray result,proba,protect
     for i in protect_feature:
         feature_filter[i] = dat[i].unique()
         last_feature_filter[i] = dat[i].unique()
@@ -154,7 +160,7 @@ def bias_subscan_sub(dat, mode="right"):
             q_max = 0
         else:
             q_max, _, _ = solve_q_max(res, pro, ari, mode)
-    
+
     cur_best_score = -func(q_max, res, pro, ari)
 
 
